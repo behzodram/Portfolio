@@ -34,24 +34,32 @@ function updateThemeIcon() {
 // Projects Data - EASILY EDIT THIS SECTION
 const projects = [
     {
-        title: "Weather App",
-        description: "Android application that displays current weather using OpenWeather API.",
-        technologies: ["Kotlin", "Retrofit", "OpenWeather API"],
-        image: "assets/images/weather-app.jpg",
-        githubLink: "https://github.com/yourusername/weather-app",
-        downloadLink: "assets/downloads/weather-app.apk",
-        qrCode: "assets/images/qr-weather.png"
+        title: "Time Picker",
+        description: "Android application that displays any time to pick the screen.",
+        technologies: ["html", "css", "js"],
+        image: "assets/images/PickTime.png",
+        githubLink: "https://behzodram.github.io/PickTime/",
+        downloadLink: "assets/downloads/PickTime.apk", // Path to your APK file
+        directDownload: true // Add this flag
     },
     {
-        title: "To-Do List",
-        description: "Simple task management application with SQLite database integration.",
-        technologies: ["Java", "SQLite", "Android Studio"],
-        image: "assets/images/todo-app.jpg",
-        githubLink: "https://github.com/yourusername/todo-app",
-        downloadLink: "assets/downloads/todo-app.apk",
-        qrCode: "assets/images/qr-todo.png"
+        title: "Control",
+        description: "Control homework application with firebase database integration.",
+        technologies: ["html", "Firebase", "js"],
+        image: "assets/images/Control.png",
+        githubLink: "https://behzodram.github.io/Control/",
+        downloadLink: "assets/downloads/Control.apk", // Path to your APK file
+        directDownload: true // Add this flag
     },
-    // Add more projects as needed
+    {
+        title: "TruckDispatch",
+        description: "Android application that is useful for dispatchers.",
+        technologies: ["html", "css", "js", "Firebase"],
+        image: "assets/images/TruckDispatch.png",
+        githubLink: "https://behzodram.github.io/TruckDispatch/",
+        downloadLink: "assets/downloads/TruckDispatch.apk", // Path to your APK file
+        directDownload: true // Add this flag
+    }
 ];
 
 // Load Projects Dynamically
@@ -61,6 +69,12 @@ function loadProjects() {
     projects.forEach(project => {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card fade-in';
+        
+        // Create download button HTML if directDownload is true
+        const downloadButton = project.directDownload ? 
+            `<a href="${project.downloadLink}" download class="btn download-btn" onclick="trackDownload('${project.title}')">
+                <i class="fas fa-download"></i> Download APK
+            </a>` : '';
         
         projectCard.innerHTML = `
             <div class="project-image">
@@ -73,18 +87,22 @@ function loadProjects() {
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
                 <div class="project-links">
-                    <a href="${project.githubLink}" target="_blank">
-                        <i class="fab fa-github"></i> Code
+                    <a href="${project.githubLink}" target="_blank" class="code-link">
+                        <i class="fab fa-github"></i> View Code
                     </a>
-                    <div class="qr-code">
-                        <img src="${project.qrCode}" alt="QR Code for ${project.title}">
-                    </div>
+                    ${downloadButton}
                 </div>
             </div>
         `;
         
         projectsGrid.appendChild(projectCard);
     });
+}
+
+// Add this function to track downloads
+function trackDownload(appName) {
+    console.log(`${appName} downloaded`);
+    // You can add analytics here later
 }
 
 // Set current year in footer
@@ -116,5 +134,17 @@ if (contactForm) {
         e.preventDefault();
         alert('Thank you for your message! I will get back to you soon.');
         contactForm.reset();
+    });
+}
+
+// Profil rasmi uchun aylana animatsiya
+const profileImage = document.querySelector('.hero-image img');
+if (profileImage) {
+    profileImage.addEventListener('mouseenter', () => {
+        profileImage.style.transform = 'scale(1.1)';
+    });
+    
+    profileImage.addEventListener('mouseleave', () => {
+        profileImage.style.transform = 'scale(1)';
     });
 }
