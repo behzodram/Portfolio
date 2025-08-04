@@ -34,6 +34,16 @@ function updateThemeIcon() {
 // Projects Data - EASILY EDIT THIS SECTION
 const projects = [
     {
+        title: "BallCatcher",
+        description: "Android application that displays any time to pick the screen.",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/BallCatcher.png",
+        githubLink: "https://github.com/behzodram/BallCatcher",
+        demoLink: "https://behzodram.github.io/BallCatcher/",
+        downloadLink: "assets/downloads/BallCatcher.apk",
+        directDownload: true
+    },
+    {
         title: "Time Picker",
         description: "Android application that displays any time to pick the screen.",
         technologies: ["HTML", "CSS", "JavaScript"],
