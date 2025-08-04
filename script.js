@@ -3,11 +3,11 @@ const themeToggle = document.querySelector('.theme-toggle');
 const body = document.body;
 
 // Check for saved theme preference
-const currentTheme = localStorage.getItem('theme');
-if (currentTheme) {
-    body.setAttribute('data-theme', currentTheme);
-    updateThemeIcon();
-}
+const currentTheme = body.setAttribute('data-theme', 'dark');
+// if (currentTheme) {
+//     body.setAttribute('data-theme', currentTheme);
+//     updateThemeIcon();
+// }
 
 // Toggle theme on button click
 themeToggle.addEventListener('click', () => {
