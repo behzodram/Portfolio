@@ -36,29 +36,32 @@ const projects = [
     {
         title: "Time Picker",
         description: "Android application that displays any time to pick the screen.",
-        technologies: ["html", "css", "js"],
+        technologies: ["HTML", "CSS", "JavaScript"],
         image: "assets/images/PickTime.png",
-        githubLink: "https://behzodram.github.io/PickTime/",
-        downloadLink: "assets/downloads/PickTime.apk", // Path to your APK file
-        directDownload: true // Add this flag
+        githubLink: "https://github.com/behzodram/PickTime",
+        demoLink: "https://behzodram.github.io/PickTime/",
+        downloadLink: "assets/downloads/PickTime.apk",
+        directDownload: true
     },
     {
         title: "Control",
         description: "Control homework application with firebase database integration.",
-        technologies: ["html", "Firebase", "js"],
+        technologies: ["HTML", "Firebase", "JavaScript"],
         image: "assets/images/Control.png",
-        githubLink: "https://behzodram.github.io/Control/",
-        downloadLink: "assets/downloads/Control.apk", // Path to your APK file
-        directDownload: true // Add this flag
+        githubLink: "https://github.com/behzodram/Control/",
+        demoLink: "https://behzodram.github.io/Control/",
+        downloadLink: "assets/downloads/Control.apk",
+        directDownload: true
     },
     {
         title: "TruckDispatch",
         description: "Android application that is useful for dispatchers.",
-        technologies: ["html", "css", "js", "Firebase"],
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
         image: "assets/images/TruckDispatch.png",
-        githubLink: "https://behzodram.github.io/TruckDispatch/",
-        downloadLink: "assets/downloads/TruckDispatch.apk", // Path to your APK file
-        directDownload: true // Add this flag
+        githubLink: "https://github.com/behzodram/TruckDispatch/",
+        demoLink: "https://behzodram.github.io/TruckDispatch/",
+        downloadLink: "assets/downloads/TruckDispatch.apk",
+        directDownload: true
     }
 ];
 
@@ -69,12 +72,6 @@ function loadProjects() {
     projects.forEach(project => {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card fade-in';
-        
-        // Create download button HTML if directDownload is true
-        const downloadButton = project.directDownload ? 
-            `<a href="${project.downloadLink}" download class="btn download-btn" onclick="trackDownload('${project.title}')">
-                <i class="fas fa-download"></i> Download APK
-            </a>` : '';
         
         projectCard.innerHTML = `
             <div class="project-image">
@@ -87,10 +84,16 @@ function loadProjects() {
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
                 <div class="project-links">
-                    <a href="${project.githubLink}" target="_blank" class="code-link">
-                        <i class="fab fa-github"></i> View Code
+                    <a href="${project.githubLink}" target="_blank" class="project-link github-link">
+                        <i class="fab fa-github"></i> Code
                     </a>
-                    ${downloadButton}
+                    <a href="${project.demoLink}" target="_blank" class="project-link visit-link">
+                        <i class="fas fa-external-link-alt"></i> Visit
+                    </a>
+                    ${project.directDownload ? 
+                        `<a href="${project.downloadLink}" download class="project-link download-link" onclick="trackDownload('${project.title}')">
+                            <i class="fas fa-download"></i> Download
+                        </a>` : ''}
                 </div>
             </div>
         `;
@@ -126,16 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 });
-
-// Simple form handling
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
-    });
-}
 
 // Profil rasmi uchun aylana animatsiya
 const profileImage = document.querySelector('.hero-image img');
