@@ -33,9 +33,9 @@ function updateThemeIcon() {
 
 // Projects Data - EASILY EDIT THIS SECTION
 const projects = [
-    {
+     {
         title: "BallCatcher",
-        description: "Android application that displays any time to pick the screen.",
+        description: "Android Game application. Just catch the balls and see your analitics with Leaderboard.",
         technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
         image: "assets/images/BallCatcher.png",
         githubLink: "https://github.com/behzodram/BallCatcher",
@@ -44,13 +44,23 @@ const projects = [
         directDownload: true
     },
     {
-        title: "Time Picker",
-        description: "Android application that displays any time to pick the screen.",
-        technologies: ["HTML", "CSS", "JavaScript"],
-        image: "assets/images/PickTime.png",
-        githubLink: "https://github.com/behzodram/PickTime",
-        demoLink: "https://behzodram.github.io/PickTime/",
-        downloadLink: "assets/downloads/PickTime.apk",
+        title: "PuncturedBall",
+        description: "Android Game application. Just touch the ball on screen.",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/PuncturedBall.png",
+        githubLink: "https://github.com/behzodram/PuncturedBall",
+        demoLink: "https://behzodram.github.io/PuncturedBall/",
+        downloadLink: "assets/downloads/PuncturedBall.apk",
+        directDownload: true
+    },
+    {
+        title: "TruckDispatch",
+        description: "Android application that is useful for dispatchers.",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/TruckDispatch.png",
+        githubLink: "https://github.com/behzodram/TruckDispatch/",
+        demoLink: "https://behzodram.github.io/TruckDispatch/",
+        downloadLink: "assets/downloads/TruckDispatch.apk",
         directDownload: true
     },
     {
@@ -64,15 +74,15 @@ const projects = [
         directDownload: true
     },
     {
-        title: "TruckDispatch",
-        description: "Android application that is useful for dispatchers.",
-        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
-        image: "assets/images/TruckDispatch.png",
-        githubLink: "https://github.com/behzodram/TruckDispatch/",
-        demoLink: "https://behzodram.github.io/TruckDispatch/",
-        downloadLink: "assets/downloads/TruckDispatch.apk",
+        title: "Time Picker",
+        description: "Android application that displays any time to pick the screen.",
+        technologies: ["HTML", "CSS", "JavaScript"],
+        image: "assets/images/PickTime.png",
+        githubLink: "https://github.com/behzodram/PickTime",
+        demoLink: "https://behzodram.github.io/PickTime/",
+        downloadLink: "assets/downloads/PickTime.apk",
         directDownload: true
-    }
+    },
 ];
 
 // Load Projects Dynamically
