@@ -1,15 +1,29 @@
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBgRcO99DQFn_6uch7-E7WmZaAYy8Rz4q8",
+    authDomain: "portfolio-76d47.firebaseapp.com",
+    projectId: "portfolio-76d47",
+    storageBucket: "portfolio-76d47.appspot.com",
+    messagingSenderId: "650638529065",
+    appId: "1:650638529065:web:91bebf6a20bddf57560238",
+    measurementId: "G-YQSTWRHM43",
+    databaseURL: "https://portfolio-76d47-default-rtdb.firebaseio.com/"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 // Theme Toggle
 const themeToggle = document.querySelector('.theme-toggle');
 const body = document.body;
 
-// Check for saved theme preference
 const currentTheme = localStorage.getItem('theme');
 if (currentTheme) {
     body.setAttribute('data-theme', currentTheme);
     updateThemeIcon();
 }
 
-// Toggle theme on button click
 themeToggle.addEventListener('click', () => {
     if (body.getAttribute('data-theme') === 'dark') {
         body.setAttribute('data-theme', 'light');
@@ -31,9 +45,9 @@ function updateThemeIcon() {
     }
 }
 
-// Projects Data - EASILY EDIT THIS SECTION
+// Projects Data
 const projects = [
-     {
+    {
         title: "BallCatcher",
         description: "Android Game application. Just catch the balls and see your analitics with Leaderboard.",
         technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
@@ -95,7 +109,19 @@ const projects = [
     },
 ];
 
-// Load Projects Dynamically
+// Modal elements
+const modal = document.getElementById('feedback-modal');
+const modalTitle = document.getElementById('modal-project-title');
+const closeModal = document.querySelector('.close-modal');
+const stars = document.querySelectorAll('.stars i');
+const commentText = document.getElementById('comment-text');
+const submitFeedback = document.getElementById('submit-feedback');
+const feedbackList = document.getElementById('feedback-list');
+
+let currentProject = null;
+let selectedRating = 0;
+
+// Load Projects with counters
 function loadProjects() {
     const projectsGrid = document.querySelector('.projects-grid');
     
@@ -113,11 +139,23 @@ function loadProjects() {
                 <div class="project-tech">
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
+                <div class="click-counters" id="counters-${project.title.replace(/\s+/g, '-')}">
+                    <div class="click-counter github-counter">
+                        <i class="fab fa-github"></i> <span class="github-count">0</span>
+                    </div>
+                    <div class="click-counter visit-counter">
+                        <i class="fas fa-external-link-alt"></i> <span class="visit-count">0</span>
+                    </div>
+                    ${project.directDownload ? `
+                    <div class="click-counter download-counter">
+                        <i class="fas fa-download"></i> <span class="download-count">0</span>
+                    </div>` : ''}
+                </div>
                 <div class="project-links">
-                    <a href="${project.githubLink}" target="_blank" class="project-link github-link">
+                    <a href="${project.githubLink}" target="_blank" class="project-link github-link" onclick="trackLinkClick('${project.title}', 'github')">
                         <i class="fab fa-github"></i> Code
                     </a>
-                    <a href="${project.demoLink}" target="_blank" class="project-link visit-link">
+                    <a href="${project.demoLink}" target="_blank" class="project-link visit-link" onclick="trackLinkClick('${project.title}', 'demo')">
                         <i class="fas fa-external-link-alt"></i> Visit
                     </a>
                     ${project.directDownload ? 
@@ -125,18 +163,185 @@ function loadProjects() {
                             <i class="fas fa-download"></i> Download
                         </a>` : ''}
                 </div>
+                <button class="btn feedback-btn" data-project="${project.title}">Leave Feedback</button>
             </div>
         `;
         
         projectsGrid.appendChild(projectCard);
+        
+        // Load click counts for this project
+        loadClickCounts(project.title);
+    });
+
+    // Add event listeners to feedback buttons
+    document.querySelectorAll('.feedback-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentProject = e.target.getAttribute('data-project');
+            openFeedbackModal(currentProject);
+        });
+    });
+} 
+
+// Load click counts from Firebase
+function loadClickCounts(projectName) {
+    const projectId = projectName.replace(/\s+/g, '-');
+    const clicksRef = database.ref(`projects/${projectName}/clicks`);
+    
+    clicksRef.on('value', (snapshot) => {
+        const data = snapshot.val() || {};
+        
+        const githubCount = data.github || 0;
+        const demoCount = data.demo || 0;
+        
+        document.querySelector(`#counters-${projectId} .github-count`).textContent = githubCount;
+        document.querySelector(`#counters-${projectId} .visit-count`).textContent = demoCount;
+    });
+
+    if (projects.find(p => p.title === projectName).directDownload) {
+        const downloadsRef = database.ref(`projects/${projectName}/downloads`);
+        downloadsRef.on('value', (snapshot) => {
+            const downloadCount = snapshot.val() || 0;
+            document.querySelector(`#counters-${projectId} .download-count`).textContent = downloadCount;
+        });
+    }
+}
+
+// Track link clicks
+function trackLinkClick(projectName, linkType) {
+    const clicksRef = database.ref(`projects/${projectName}/clicks/${linkType}`);
+    clicksRef.transaction((currentCount) => {
+        return (currentCount || 0) + 1;
     });
 }
 
-// Add this function to track downloads
-function trackDownload(appName) {
-    console.log(`${appName} downloaded`);
-    // You can add analytics here later
+// Track downloads
+function trackDownload(projectName) {
+    const downloadsRef = database.ref(`projects/${projectName}/downloads`);
+    downloadsRef.transaction((currentCount) => {
+        return (currentCount || 0) + 1;
+    });
 }
+
+// Modal functions
+function openFeedbackModal(projectName) {
+    modalTitle.textContent = `Feedback for ${projectName}`;
+    modal.style.display = 'block';
+    selectedRating = 0;
+    commentText.value = '';
+    updateStars();
+    loadFeedback(projectName);
+}
+
+function closeFeedbackModal() {
+    modal.style.display = 'none';
+}
+
+function updateStars() {
+    stars.forEach((star, index) => {
+        if (index < selectedRating) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+}
+
+// Star rating interaction
+stars.forEach(star => {
+    star.addEventListener('click', () => {
+        selectedRating = parseInt(star.getAttribute('data-rating'));
+        updateStars();
+    });
+});
+
+// Submit feedback
+submitFeedback.addEventListener('click', () => {
+    if (selectedRating === 0) {
+        alert('Please select a rating before submitting.');
+        return;
+    }
+
+    const feedback = {
+        project: currentProject,
+        rating: selectedRating,
+        comment: commentText.value,
+        date: new Date().toISOString(),
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    const feedbackRef = database.ref(`projects/${currentProject}/feedback`);
+    feedbackRef.push(feedback)
+        .then(() => {
+            alert('Thank you for your feedback!');
+            commentText.value = '';
+            selectedRating = 0;
+            updateStars();
+            loadFeedback(currentProject);
+        })
+        .catch((error) => {
+            console.error('Error submitting feedback:', error);
+            alert('There was an error submitting your feedback. Please try again.');
+        });
+});
+
+// Load feedback for a project
+function loadFeedback(projectName) {
+    feedbackList.innerHTML = '<p>Loading feedback...</p>';
+    
+    const feedbackRef = database.ref(`projects/${projectName}/feedback`).orderByChild('timestamp').limitToLast(5);
+    feedbackRef.once('value')
+        .then((snapshot) => {
+            if (!snapshot.exists()) {
+                feedbackList.innerHTML = '<p>No feedback yet. Be the first to leave one!</p>';
+                return;
+            }
+
+            feedbackList.innerHTML = '';
+            const feedbacks = [];
+            
+            snapshot.forEach((childSnapshot) => {
+                feedbacks.push(childSnapshot.val());
+            });
+
+            // Sort by newest first
+            feedbacks.reverse().forEach((item) => {
+                const feedbackItem = document.createElement('div');
+                feedbackItem.className = 'feedback-item';
+                
+                let starsHtml = '';
+                for (let i = 0; i < 5; i++) {
+                    starsHtml += i < item.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+                }
+                
+                const date = new Date(item.date);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                feedbackItem.innerHTML = `
+                    <div class="rating">${starsHtml}</div>
+                    ${item.comment ? `<div class="comment">"${item.comment}"</div>` : ''}
+                    <div class="date">${formattedDate}</div>
+                `;
+                
+                feedbackList.appendChild(feedbackItem);
+            });
+        })
+        .catch((error) => {
+            console.error('Error loading feedback:', error);
+            feedbackList.innerHTML = '<p>Error loading feedback. Please try again later.</p>';
+        });
+}
+
+// Close modal when clicking X or outside
+closeModal.addEventListener('click', closeFeedbackModal);
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeFeedbackModal();
+    }
+});
 
 // Set current year in footer
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -160,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Profil rasmi uchun aylana animatsiya
+// Profile image animation
 const profileImage = document.querySelector('.hero-image img');
 if (profileImage) {
     profileImage.addEventListener('mouseenter', () => {
