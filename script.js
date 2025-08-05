@@ -44,6 +44,16 @@ const projects = [
         directDownload: true
     },
     {
+        title: "ColorDetector",
+        description: "Android Game application. 10 Levels. You can confuse as levels up. On each level you can see your score",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/ColorDetector.png",
+        githubLink: "https://github.com/behzodram/ColorDetector",
+        demoLink: "https://behzodram.github.io/ColorDetector/",
+        downloadLink: "assets/downloads/ColorDetector.apk",
+        directDownload: true
+    },
+    {
         title: "PuncturedBall",
         description: "Android Game application. Just touch the ball on screen.",
         technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
