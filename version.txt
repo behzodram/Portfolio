@@ -1,1 +1,2 @@
+v 1.0.1 => main: project.js added
 v 1.0.0 => main: rasm tebranishi to'xtatildi
