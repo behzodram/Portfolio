@@ -378,7 +378,6 @@ nav .container {
     object-fit: cover;
     border: 5px solid var(--white);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
