@@ -65,6 +65,9 @@ function loadProjects() {
         const projectCard = document.createElement('div');
         projectCard.className = 'project-card fade-in';
         
+        // Project ID yaratish (xavfsiz version)
+        const projectId = project.title.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+        
         projectCard.innerHTML = `
             <div class="project-image">
                 <img src="${project.image}" alt="${project.title}">
@@ -75,7 +78,7 @@ function loadProjects() {
                 <div class="project-tech">
                     ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                 </div>
-                <div class="click-counters" id="counters-${project.title.replace(/\s+/g, '-')}">
+                <div class="click-counters" id="counters-${projectId}">
                     <div class="click-counter github-counter">
                         <i class="fab fa-github"></i> <span class="github-count">0</span>
                     </div>
@@ -88,26 +91,30 @@ function loadProjects() {
                     </div>` : ''}
                 </div>
                 <div class="project-links">
-                    <a href="${project.githubLink}" target="_blank" class="project-link github-link" onclick="trackLinkClick('${project.title}', 'github')">
+                    <a href="${project.githubLink}" target="_blank" class="project-link github-link" onclick="trackLinkClick('${project.title.replace(/'/g, "\\'")}', 'github')">
                         <i class="fab fa-github"></i> Code
                     </a>
-                    <a href="${project.demoLink}" target="_blank" class="project-link visit-link" onclick="trackLinkClick('${project.title}', 'demo')">
+                    <a href="${project.demoLink}" target="_blank" class="project-link visit-link" onclick="trackLinkClick('${project.title.replace(/'/g, "\\'")}', 'demo')">
                         <i class="fas fa-external-link-alt"></i> Visit
                     </a>
                     ${project.directDownload ? 
-                        `<a href="${project.downloadLink}" download class="project-link download-link" onclick="trackDownload('${project.title}')">
+                        `<a href="${project.downloadLink}" download class="project-link download-link" onclick="trackDownload('${project.title.replace(/'/g, "\\'")}')">
                             <i class="fas fa-download"></i> Download
                         </a>` : ''}
                 </div>
-                <button class="btn feedback-btn" data-project="${project.title}">Leave Feedback</button>
+                <button class="btn feedback-btn" data-project="${project.title.replace(/'/g, "&apos;")}">Leave Feedback</button>
             </div>
         `;
         
         projectsGrid.appendChild(projectCard);
-        
-        // Load click counts for this project
-        loadClickCounts(project.title);
     });
+
+    // Counterlarni yuklash (barcha projectlar yaratilgandan keyin)
+    setTimeout(() => {
+        projects.forEach(project => {
+            loadClickCounts(project.title);
+        });
+    }, 100);
 
     // Add event listeners to feedback buttons
     document.querySelectorAll('.feedback-btn').forEach(btn => {
@@ -116,42 +123,55 @@ function loadProjects() {
             openFeedbackModal(currentProject);
         });
     });
-} 
+}
 
 // Load click counts from Firebase
 function loadClickCounts(projectName) {
-    const projectId = projectName.replace(/\s+/g, '-');
-    const clicksRef = database.ref(`projects/${projectName}/clicks`);
+    if (!projectName) return;
     
+    const projectId = projectName.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    
+    // GitHub va Visit counterlar
+    const clicksRef = database.ref(`projects/${projectName}/clicks`);
     clicksRef.on('value', (snapshot) => {
         const data = snapshot.val() || {};
         
         const githubCount = data.github || 0;
         const demoCount = data.demo || 0;
         
-        document.querySelector(`#counters-${projectId} .github-count`).textContent = githubCount;
-        document.querySelector(`#counters-${projectId} .visit-count`).textContent = demoCount;
+        const githubElement = document.querySelector(`#counters-${projectId} .github-count`);
+        const visitElement = document.querySelector(`#counters-${projectId} .visit-count`);
+        
+        if (githubElement) githubElement.textContent = githubCount;
+        if (visitElement) visitElement.textContent = demoCount;
     });
 
-    if (projects.find(p => p.title === projectName).directDownload) {
+    // Download counter (agar mavjud bo'lsa)
+    const project = projects.find(p => p.title === projectName);
+    if (project && project.directDownload) {
         const downloadsRef = database.ref(`projects/${projectName}/downloads`);
         downloadsRef.on('value', (snapshot) => {
             const downloadCount = snapshot.val() || 0;
-            document.querySelector(`#counters-${projectId} .download-count`).textContent = downloadCount;
+            const downloadElement = document.querySelector(`#counters-${projectId} .download-count`);
+            if (downloadElement) downloadElement.textContent = downloadCount;
         });
     }
 }
 
-// Track link clicks
-function trackLinkClick(projectName, linkType) {
+// Track link clicks (global funksiya)
+window.trackLinkClick = function(projectName, linkType) {
+    if (!projectName) return;
+    
     const clicksRef = database.ref(`projects/${projectName}/clicks/${linkType}`);
     clicksRef.transaction((currentCount) => {
         return (currentCount || 0) + 1;
     });
 }
 
-// Track downloads
-function trackDownload(projectName) {
+// Track downloads (global funksiya)
+window.trackDownload = function(projectName) {
+    if (!projectName) return;
+    
     const downloadsRef = database.ref(`projects/${projectName}/downloads`);
     downloadsRef.transaction((currentCount) => {
         return (currentCount || 0) + 1;
@@ -284,7 +304,18 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    loadProjects();
+    // projects array mavjudligini tekshirish
+    if (typeof projects !== 'undefined' && projects.length > 0) {
+        loadProjects();
+    } else {
+        console.error('Projects array is not defined or empty');
+        // projects.js yuklanishini kutish
+        setTimeout(() => {
+            if (typeof projects !== 'undefined' && projects.length > 0) {
+                loadProjects();
+            }
+        }, 500);
+    }
     
     // Add scroll animation to sections
     const sections = document.querySelectorAll('section');

@@ -1,3 +1,4 @@
+v 1.0.3 => main: project link counters updated cause was not counting
 v 1.0.2 => main: html da script.js <script type=module>import ./script.js?v=0;</script> orqali import qilinmoqda
 v 1.0.1 => main: project.js added
 v 1.0.0 => main: rasm tebranishi to'xtatildi
