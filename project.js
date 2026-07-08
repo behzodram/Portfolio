@@ -22,6 +22,26 @@ const projects = [
         directDownload: true
     },
     {
+        title: "Rasmni matnga aylantiruvchi Telegram bot",
+        description: "Telegram bot for converting images to text.",
+        technologies: ["Python", "Telegram API", "AWS"],
+        image: "assets/images/TelegramBot-TTI.png",
+        githubLink: "https://github.com/behzodram/OCR_bot",
+        demoLink: "https://t.me/rasmni_matnga_bot",
+        downloadLink: "https://t.me/rasmni_matnga_bot",   
+        directDownload: true
+    },
+    {
+        title: "Kanal Guruh va Bot saqlovchi va uzatuvchi Telegram bot",
+        description: "Telegram bot for managing channels, groups, and bots.",
+        technologies: ["Python", "Telegram API"],
+        image: "assets/images/TelegramBot-KSB.png",
+        githubLink: "https://github.com/behzodram/ChannelSaveBot",
+        demoLink: "https://t.me/ChannelGroupsSaverBot",
+        downloadLink: "https://t.me/ChannelGroupsSaverBot",
+        directDownload: true
+    },
+    {
         title: "ColorDetector",
         description: "Android Game application. 10 Levels. You can confuse as levels up. On each level you can see your score",
         technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
