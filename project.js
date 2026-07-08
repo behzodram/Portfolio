@@ -2,6 +2,26 @@
 // Projects Data
 const projects = [
     {
+        title: "Eski Saytlarim",
+        description: "Bu mening eski saytlarim sahifasi. Bunda siz o'zingizga kerak sayt havolasini qo'sha olasiz.",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/old-links.png",
+        githubLink: "https://github.com/behzodram/Old-links",
+        demoLink: "https://old-links.web.app/",
+        downloadLink: "assets/downloads/Old-Links.apk",
+        directDownload: true
+    },
+    {
+        title: "DailyPlanner",
+        description: "Android application for daily planning and task management.",
+        technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
+        image: "assets/images/DairyHubList.png",
+        githubLink: "https://github.com/behzodram/Dairy-hub-list",
+        demoLink: "https://dairy-hub-list.web.app/",
+        downloadLink: "assets/downloads/DailyPlanner.apk",
+        directDownload: true
+    },
+    {
         title: "ColorDetector",
         description: "Android Game application. 10 Levels. You can confuse as levels up. On each level you can see your score",
         technologies: ["HTML", "CSS", "JavaScript", "Firebase"],
