@@ -1,3 +1,4 @@
+v 1.0.5 => main: site with self icon
 v 1.0.4 => main: 2 new project added.
 v 1.0.3 => main: project link counters updated cause was not counting
 v 1.0.2 => main: html da script.js <script type=module>import ./script.js?v=0;</script> orqali import qilinmoqda
